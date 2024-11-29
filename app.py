@@ -84,8 +84,8 @@ def course_genration_module():
    
         return jsonify(out_line.txt), 200
     except Exception as e:
-        return jsonify({"error": "An error occurred, you may have reached the rate limit"}), 500
-        # return jsonify({"error": e}), 500
+        # return jsonify({"error": "An error occurred, you may have reached the rate limit"}), 500
+        return jsonify({"error": e}), 500
 
 
 if __name__ == '__main__':
