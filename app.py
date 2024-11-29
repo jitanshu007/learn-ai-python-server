@@ -81,9 +81,8 @@ def course_genration_module():
             out_line = Miscellaneous_model.generate_content(
                 Genrate_Module(module, course))
        
-        clean_response = repair_json(out_line.text.lstrip("```json").rstrip(
-            "```").strip())
-        return jsonify(clean_response), 200
+   
+        return jsonify(out_line.txt), 200
     except Exception as e:
         return jsonify({"error": "An error occurred, you may have reached the rate limit"}), 500
         # return jsonify({"error": e}), 500
