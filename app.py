@@ -89,7 +89,7 @@ def course_genration_module():
                 Genrate_Module(module, course))
         
         print(out_line_2)
-        return jsonify({"content": str(out_line_2.txt)}), 200
+        return jsonify({"content": str(out_line_2.text)}), 200
     except Exception as e:
         # return jsonify({"error": "An error occurred, you may have reached the rate limit"}), 500
         return jsonify({"error": e}), 500
