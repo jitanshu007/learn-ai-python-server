@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from router import Genrate_Topic_SubTopic
 from promts import Genrate_Outline, Genrate_Module, Programming_Model_system_instruction, Science_Model_system_instruction, Maths_Model_system_instruction, Miscellaneous_Model_system_instruction
+from json_repair import repair_json
 
 load_dotenv()
 
@@ -52,8 +53,8 @@ def course_genration_outline():
             out_line = Miscellaneous_model.generate_content(
                 Genrate_Outline(input_text, subtopics_text, dominant_topic))
 
-        clean_response = out_line.text.lstrip("```json").rstrip(
-            "```").strip()
+        clean_response = repair_json(out_line.text.lstrip("```json").rstrip(
+            "```").strip())
         return jsonify(clean_response), 200
     except Exception as e:
         print(e)
@@ -79,8 +80,10 @@ def course_genration_module():
         else:
             out_line = Miscellaneous_model.generate_content(
                 Genrate_Module(module, course))
-
-        return jsonify(out_line.text), 200
+       
+        clean_response = repair_json(out_line.text.lstrip("```json").rstrip(
+            "```").strip())
+        return jsonify(clean_response), 200
     except Exception as e:
         return jsonify({"error": "An error occurred, you may have reached the rate limit"}), 500
         # return jsonify({"error": e}), 500
