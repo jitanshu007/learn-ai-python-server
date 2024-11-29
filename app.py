@@ -68,21 +68,27 @@ def course_genration_module():
         module = request.json.get('module')
         course = request.json.get('course')
         topic = request.json.get('topic')
+        print(module)
+        print(course)
+        print(topic)
         if topic == "Programming":
+            print("Programming")
             out_line = Programing_model.generate_content(
                 Genrate_Module(module, course))
         elif topic == "Science":
+            print("Science")
             out_line = Science_model.generate_content(
                 Genrate_Module(module, course))
         elif topic == "Maths":
+            print("Maths")
             out_line = Maths_model.generate_content(
                 Genrate_Module(module, course))
         else:
+            print("Miscellaneous_model")
             out_line = Miscellaneous_model.generate_content(
                 Genrate_Module(module, course))
-       
-   
-        return jsonify(out_line.txt), 200
+                
+        return jsonify({"content": out_line.txt}), 200
     except Exception as e:
         # return jsonify({"error": "An error occurred, you may have reached the rate limit"}), 500
         return jsonify({"error": e}), 500
