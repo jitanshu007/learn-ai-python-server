@@ -65,9 +65,9 @@ def course_genration_outline():
 def course_genration_module():
 
     try:
-        module = request.json.get('module')
-        course = request.json.get('course')
-        topic = request.json.get('topic')
+        module = str(request.json.get('module'))
+        course = str(request.json.get('course'))
+        topic = str(request.json.get('topic'))
         print(module)
         print(course)
         print(topic)
@@ -87,7 +87,8 @@ def course_genration_module():
             print("Miscellaneous_model")
             out_line = Miscellaneous_model.generate_content(
                 Genrate_Module(module, course))
-
+        
+        print(out_line.txt)
         return jsonify({"content": str(out_line.txt)}), 200
     except Exception as e:
         # return jsonify({"error": "An error occurred, you may have reached the rate limit"}), 500
