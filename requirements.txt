@@ -4,3 +4,4 @@ python-dotenv
 google-generativeai
 Gunicorn
 json-repair
+groq

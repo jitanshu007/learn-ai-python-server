@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 from router import Genrate_Topic_SubTopic
 from promts import Genrate_Outline, Genrate_Module, Programming_Model_system_instruction, Science_Model_system_instruction, Maths_Model_system_instruction, Miscellaneous_Model_system_instruction
 from json_repair import repair_json
+import os
+from groq import Groq
 
 load_dotenv()
 
@@ -22,34 +24,29 @@ Maths_model = genai.GenerativeModel(
     model_name="gemini-1.5-flash", system_instruction=Maths_Model_system_instruction())
 Miscellaneous_model = genai.GenerativeModel(
     model_name="gemini-1.5-flash", system_instruction=Miscellaneous_Model_system_instruction())
-
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 @app.route('/v1/course-genration-outline', methods=['POST'])
 def course_genration_outline():
     try:
         input_text = str(request.json.get('input_text'))
-        # print(f"Input Text: {input_text}")
         dominant_topic, subtopics = Genrate_Topic_SubTopic(
             router_model, input_text)
-        # print(f"Dominant Topic: {dominant_topic}, Subtopics: {subtopics}")
+
         if dominant_topic == "Programming":
             subtopics_text = ", ".join(subtopics)
-            # print(f"Subtopics Text: {subtopics_text}")
             out_line = Programing_model.generate_content(
                 Genrate_Outline(input_text, subtopics_text, dominant_topic))
         elif dominant_topic == "Science":
             subtopics_text = ", ".join(subtopics)
-            # print(f"Subtopics Text: {subtopics_text}")
             out_line = Science_model.generate_content(
                 Genrate_Outline(input_text, subtopics_text, dominant_topic))
         elif dominant_topic == "Maths":
             subtopics_text = ", ".join(subtopics)
-            # print(f"Subtopics Text: {subtopics_text}")
             out_line = Maths_model.generate_content(
                 Genrate_Outline(input_text, subtopics_text, dominant_topic))
         else:
             subtopics_text = ", ".join(subtopics)
-            # print(f"Subtopics Text: {subtopics_text}")
             out_line = Miscellaneous_model.generate_content(
                 Genrate_Outline(input_text, subtopics_text, dominant_topic))
 
@@ -68,9 +65,6 @@ def course_genration_module():
         module = str(request.json.get('module'))
         course = str(request.json.get('course'))
         topic = str(request.json.get('topic'))
-        print(module)
-        print(course)
-        print(topic)
         if topic == "Programming":
             print("Programming")
             out_line_2 = Programing_model.generate_content(
@@ -87,11 +81,37 @@ def course_genration_module():
             print("Miscellaneous_model")
             out_line_2 = Miscellaneous_model.generate_content(
                 Genrate_Module(module, course))
-        
-        print(out_line_2)
+
         return jsonify({"content": str(out_line_2.text)}), 200
     except Exception as e:
-        # return jsonify({"error": "An error occurred, you may have reached the rate limit"}), 500
+        return jsonify({"error": "An error occurred, you may have reached the rate limit"}), 500
+        # return jsonify({"error": e}), 500
+
+
+@app.route('/v1/query', methods=['POST'])
+def query_llm():
+    try:
+        query = str(request.json.get('query'))
+        content = str(request.json.get('content'))
+        print(query)
+        print(content)
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": "you are a helpful assistant."
+                },
+                {
+                    "role": "user",
+                    "content": f"Provide a concise response (around 100 words) to the following query: {query}, using the information from the given content: {content}",
+                }
+            ],
+            model="llama-3.1-70b-versatile",
+        )
+        print(chat_completion.choices[0].message.content)
+        return  jsonify({"content":str(chat_completion.choices[0].message.content)}),200
+
+    except Exception as e:
         return jsonify({"error": e}), 500
 
 
