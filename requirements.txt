@@ -5,3 +5,4 @@ google-generativeai
 Gunicorn
 json-repair
 groq
+httpx
