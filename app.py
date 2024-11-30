@@ -12,6 +12,9 @@ load_dotenv()
 
 app = Flask(__name__)
 
+print("GROQ_API_KEY:", bool(os.environ.get("GROQ_API_KEY")))
+print("Environment:", os.environ)
+
 api_Key = os.environ.get("API_KEY")
 genai.configure(api_key=api_Key)
 
@@ -24,7 +27,9 @@ Maths_model = genai.GenerativeModel(
     model_name="gemini-1.5-flash", system_instruction=Maths_Model_system_instruction())
 Miscellaneous_model = genai.GenerativeModel(
     model_name="gemini-1.5-flash", system_instruction=Miscellaneous_Model_system_instruction())
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+api_key_gk=os.environ.get("GROQ_API_KEY")
+client = Groq(api_key=api_key_gk)
 
 @app.route('/v1/course-genration-outline', methods=['POST'])
 def course_genration_outline():
