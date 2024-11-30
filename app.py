@@ -12,8 +12,6 @@ load_dotenv()
 
 app = Flask(__name__)
 
-print("GROQ_API_KEY:", bool(os.environ.get("GROQ_API_KEY")))
-print("Environment:", os.environ)
 
 api_Key = os.environ.get("API_KEY")
 genai.configure(api_key=api_Key)
@@ -104,16 +102,16 @@ def query_llm():
             messages=[
                 {
                     "role": "system",
-                    "content": "you are a helpful assistant."
+                    "content": "You are a helpful assistant. Provide concise responses (around 100 words) to user queries in valid HTML format, including headings, paragraphs, or lists where appropriate."
                 },
                 {
                     "role": "user",
-                    "content": f"Provide a concise response (around 100 words) to the following query: {query}, using the information from the given content: {content}",
+                    "content": f"Using the information from the given context: {content}, answer the following query: {query}. Ensure the response is concise, clear, and relevant",
                 }
             ],
             model="llama-3.1-70b-versatile",
         )
-        print(chat_completion.choices[0].message.content)
+
         return  jsonify({"content":str(chat_completion.choices[0].message.content)}),200
 
     except Exception as e:
