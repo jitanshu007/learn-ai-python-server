@@ -96,8 +96,7 @@ def query_llm():
     try:
         query = str(request.json.get('query'))
         content = str(request.json.get('content'))
-        print(query)
-        print(content)
+
         chat_completion = client.chat.completions.create(
             messages=[
                 {
