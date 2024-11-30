@@ -102,7 +102,7 @@ def query_llm():
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helpful assistant. Provide concise responses (around 100 words) to user queries in valid HTML format, including headings, paragraphs, or lists where appropriate."
+                    "content": "You are a precise and helpful assistant. Always provide concise responses (around 100 words) based on the given context. If the query is unclear or lacks context, politely ask for clarification."
                 },
                 {
                     "role": "user",
